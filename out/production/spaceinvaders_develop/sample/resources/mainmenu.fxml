@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane prefHeight="384.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.tsi.view.mainmenucontrol">
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <children>
+      <ImageView fitHeight="384.0" fitWidth="512.0">
+         <image>
+            <Image url="@../stuff/bakground_bluetoblack_right.png" />
+         </image>
+      </ImageView>
+      <Pane prefHeight="393.0" prefWidth="519.0">
+         <children>
+            <Button id="startbutt" layoutX="210.0" layoutY="176.0" mnemonicParsing="false" onAction="#handleStart" prefHeight="0.0" prefWidth="92.0" text="Start">
+               <font>
+                  <Font name="Helvetica Neue" size="13.0" />
+               </font>
+            </Button>
+            <Button id="hscorebutt" layoutX="210.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleHighScores" prefHeight="27.0" prefWidth="92.0" text="High Scores">
+               <font>
+                  <Font name="Helvetica Neue" size="13.0" />
+               </font>
+            </Button>
+            <Button id="quitbutt" layoutX="210.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleQuit" prefHeight="27.0" prefWidth="92.0" text="Quit">
+               <font>
+                  <Font name="Helvetica Neue" size="13.0" />
+               </font>
+            </Button>
+            <Text fx:id="nametagmain" fill="#e1f1f8" layoutX="238.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
+               <font>
+                  <Font name="Helvetica Neue" size="15.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</GridPane>

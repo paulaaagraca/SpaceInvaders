@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="384.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.tsi.view.gamemenucontrol">
+   <children>
+      <ImageView fitHeight="384.0" fitWidth="512.0">
+         <image>
+            <Image url="@../stuff/background_space1.jpg" />
+         </image>
+      </ImageView>
+      <Text id="timetext" fill="#e1f1f8" layoutX="352.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
+         <font>
+            <Font name="Helvetica Neue" size="22.0" />
+         </font>
+      </Text>
+      <Text id="xinvadercount" fill="#e1f1f8" layoutX="426.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X " textAlignment="CENTER">
+         <font>
+            <Font name="Helvetica Neue" size="22.0" />
+         </font>
+      </Text>
+      <Button id="gamemenu" layoutX="472.0" layoutY="12.0" mnemonicParsing="false" onAction="#handleGameMenu" prefHeight="25.0" prefWidth="25.0" text="M" />
+   </children>
+</AnchorPane>
