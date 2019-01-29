@@ -1,17 +1,19 @@
 package sample.tsi.controller;
 
-import javafx.animation.AnimationTimer;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sample.tsi.model.LevelBluePrint;
 import sample.tsi.model.Player;
 import sample.tsi.model.Sound;
 import javafx.scene.canvas.Canvas;
-import sample.tsi.controller.Interface;
+
+import java.io.IOException;
 
 public class GameManager {
     public int gamestate;
@@ -23,28 +25,45 @@ public class GameManager {
     public Interface uinterface;
     public Group root;
     public boolean pauseFlag;
-    private double time;
-    private Stage stage;
+    public double time;
+    public Stage stage;
+    int W = 512;
+    int H = 384;
 
-    //TODO:constructor
-    /*//public GameManager(Player player){
+    boolean goup = false,
+            goright = false,
+            goleft = false,
+            godown = false,
+            paused = false,
+            space = false;
+
+
+    //constructor
+    public GameManager(Player player, Stage stage){ //add level
         this.player = player;
+        this.stage = stage;
     }
-*/
 
+    public void loop() throws IOException {
 
-    public void updateloop(){
         root = new Group();
+        Interface theinterface = new Interface();
 
-        Interface ninterface = new Interface();
-        //ninterface.invaders1();
-        Scene setscene = new Scene(root, 512, 384);
+        Scene setscene = new Scene(root, W, H, Color.MIDNIGHTBLUE);
         stage.setScene(setscene);
 
-        Canvas canvas = new Canvas(512, 384);
-        //navigate();
+        Canvas canvas = new Canvas(W, H);
+        root.getChildren().add(theinterface.showspaceship());
 
-        final long startTime = System.nanoTime();
+        moveTo(W / 2, H / 2, theinterface.showspaceship());
+
+        //Scene scene = new Scene(dungeon, W, H, Color.FORESTGREEN);
+
+
+
+
+
+/*        final long startTime = System.nanoTime();
         new AnimationTimer(){
             public void handle(long currentNanoTime){
                 if(!pauseFlag){
@@ -107,6 +126,33 @@ public class GameManager {
         if(pauseFlag){
 
 
+        }
+    }*/
+
+    }
+
+    private void moveBy(int dx, int dy, Group g) {
+        if (dx == 0 && dy == 0) return;
+
+        final double cx = g.getBoundsInLocal().getWidth() / 2;
+        final double cy = g.getBoundsInLocal().getHeight() / 2;
+
+        double x = cx + g.getLayoutX() + dx;
+        double y = cy + g.getLayoutY() + dy;
+
+        moveTo(x, y, g);
+    }
+
+    private void moveTo(double x, double y, Node g) {
+
+        final double cx = g.getBoundsInLocal().getWidth() ;
+        final double cy = g.getBoundsInLocal().getHeight();
+
+        if (x - cx >= 0 &&
+                x + cx <= W &&
+                y - cy >= 0 &&
+                y + cy <= H) {
+            g.relocate(x - cx, y - cy);
         }
     }
 

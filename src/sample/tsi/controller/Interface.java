@@ -20,29 +20,63 @@ public class Interface {
     public List<Node> invaders;
     int invadercount;
 
+
     int updateInterface(){
+
 
 
         return 1;
     }
 
-    public static Group invaders1(){
+   /* public static Group invaders1(){
         List<Node> invaders;
         invaders = new ArrayList<>();
         Image img1 = new Image("sample/stuff/invader1b.png");
         Node invader1 = new ImageView(img1);
 
         for (double i = 50; i < 500; i += 50) {
-            //how to add the image??
-            Invader invader12 = new Invader(1, i, 50);
+            //Invader invader12 = new Invader(1, i, 50);
             ImageView invaderview = new ImageView(img1);
-            invaderview.setX(i * 2);
+            //invaderview.setX(i * 2);
             invaders.add(invaderview);
         }
 
         Group invadersgroup = new Group(invaders);
         return invadersgroup;
+    }*/
+
+
+    public static Group showinvader(){
+
+        Image img1 = new Image("sample/stuff/invader1b.png");
+        ImageView imginvader =  new ImageView(img1);
+        imginvader.setX(50);
+        Group invadersgroup = new Group(imginvader);
+
+        return invadersgroup;
     }
+
+    public static ImageView viewspaceship(){
+        Image imgsship = new Image("sample/stuff/spaceshipb.png");
+        ImageView viewspaceship =  new ImageView(imgsship);
+
+        return viewspaceship;
+    }
+
+    public static Group showspaceship(){
+
+        Group spaceshipgroup = new Group(viewspaceship());
+
+        return spaceshipgroup;
+    }
+
+    public void movespaceship(ImageView viewspaceship, double x, double y){
+
+        viewspaceship.setX(x);
+        viewspaceship.setY(y);
+
+    }
+
 
 
 
