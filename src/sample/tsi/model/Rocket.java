@@ -3,16 +3,14 @@ package sample.tsi.model;
 
 import javafx.scene.image.Image;
 
-public class Invader extends Entity{
-    public int type;
+public class Rocket extends Entity{
     public double x;
     public double y;
 
-    public Invader(int type, double x, double y){
-        this.type = type;
+
+    public Rocket(double x, double y){
         this.x=x;
         this.y=y;
-
     }
 
     public double getx(){
@@ -24,5 +22,4 @@ public class Invader extends Entity{
         this.x=x; }
     public void sety(double y){
         this.y=y; }
-
 }

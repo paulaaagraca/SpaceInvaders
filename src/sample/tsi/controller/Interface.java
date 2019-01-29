@@ -11,18 +11,21 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sample.tsi.model.Invader;
+import sample.tsi.model.Rocket;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Interface {
-    public List<Invader> invaders;
+    public static List<Invader> invaders;
+    public static List<Rocket> rockets = new ArrayList<Rocket>();
     public static ImageView viewspaceship;
     public static Group spaceshipgroup;
     public Group root;
     public Stage stage;
     int W = 512;
     int H = 384;
+    private boolean cannon_blocked = false;
 
     boolean goup = false,
             goright = false,
@@ -33,6 +36,16 @@ public class Interface {
 
     public Interface(Stage stage) {
         this.stage = stage;
+
+        root = new Group();
+        Scene setscene = new Scene(root, W, H, Color.MIDNIGHTBLUE);
+        stage.setScene(setscene);
+
+        Canvas canvas = new Canvas(W, H);
+        root.getChildren().add(canvas);
+        root.getChildren().add(showspaceship());
+
+        place(spaceshipgroup,W/2 - 30, H - 30);
 
         stage.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -79,23 +92,26 @@ public class Interface {
                         break;
                     case SPACE:
                         space = false;
+                        cannon_blocked = false;
                         break;
                 }
             }
         });
     }
 
-    public int updateInterface(){
+    public int updateInterface() {
 
         int dx = 0, dy = 0;
 
         if (goright) dx += 5;
         if (goleft) dx -= 5;
-        if (space) moverocket();
+        if (space && !cannon_blocked) {
+            cannon_blocked = true;
+            placerocket();
+        }
 
-        theinterface.move(theinterface.spaceshipgroup, dx, dy);
-
-
+        move(spaceshipgroup, dx, dy);
+        moverockets();
 
         return 1;
     }
@@ -120,7 +136,7 @@ public class Interface {
         return invadersgroup;
     }
 
-    public void loadlevel(int level){
+    public List<Invader> loadlevel(int level){
         invaders = new ArrayList<Invader>();
         Group g;
 
@@ -131,6 +147,7 @@ public class Interface {
             root.getChildren().add(g);
             invaders.add(invader1);
         }
+        return invaders;
     }
 
     public Group showspaceship(){
@@ -170,7 +187,7 @@ public class Interface {
         return 0;
     }
 
-    public Group rocket(){
+    public Group showrocket(){
 
         Image imgrocket = new Image("sample/stuff/rocket_size.png");
         ImageView viewrocket =  new ImageView(imgrocket);
@@ -179,9 +196,32 @@ public class Interface {
         return rocketgroup;
     }
 
-    public void moverocket() {
-        Group g = rocket();
+    public void placerocket() {
+        Group g = showrocket();
+        Rocket rocket = new Rocket(spaceshipgroup.getLayoutX() + (spaceshipgroup.getBoundsInLocal().getWidth()/2) - 2, spaceshipgroup.getLayoutY() - g.getBoundsInLocal().getHeight());
+        place(g,rocket.getx(),rocket.gety());
         root.getChildren().add(g);
-        place(g,spaceshipgroup.getLayoutX() + (spaceshipgroup.getBoundsInLocal().getWidth()/2) - 2, spaceshipgroup.getLayoutY() - g.getBoundsInLocal().getHeight());
+        rockets.add(rocket);
     }
+
+    public void moverockets(){
+        for(int i=0; i<rockets.size(); i++){
+            Rocket r = rockets.get(i);
+            for(int j=0; j<root.getChildren().size(); j++){
+                Node n = root.getChildren().get(j);
+                if(n.getLayoutX() == r.getx() && n.getLayoutY() == r.gety()){
+                    if (r.gety() == 0) {
+                        root.getChildren().remove(j);
+                        rockets.remove(i);
+                    }
+                    else {
+                        r.sety(r.gety() - 5);
+                        place(n, r.getx(), r.gety());
+                        rockets.set(i, r);
+                    }
+                }
+            }
+        }
+    }
+
 }

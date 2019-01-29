@@ -12,12 +12,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import sample.tsi.model.LevelBluePrint;
-import sample.tsi.model.Player;
-import sample.tsi.model.Sound;
+import sample.tsi.model.*;
 import javafx.scene.canvas.Canvas;
 
 import java.io.IOException;
+import java.util.List;
 
 public class GameManager {
     public int gamestate;
@@ -25,12 +24,14 @@ public class GameManager {
     public String timer;
     public Player player;
     public Sound sound;
-    public LevelBluePrint level;
     public Group root;
     public boolean paused;
     public double time;
     public Stage stage;
     public Interface theinterface;
+    public List<Invader> invaders;
+    public List<Rocket> rockets;
+    int level;
 
 
 
@@ -39,10 +40,11 @@ public class GameManager {
         this.player = player;
         this.stage = stage;
         this.theinterface = uinterface;
-
     }
 
     public void loop() throws IOException {
+
+        invaders = theinterface.loadlevel(level);
 
         final long startTime = System.nanoTime();
         AnimationTimer timer = new AnimationTimer(){
@@ -50,14 +52,19 @@ public class GameManager {
             public void handle(long currentNanoTime) {
                 if(!paused){
                     time = (currentNanoTime - startTime) / 1000000000.0;
+                    theinterface.updateInterface();
                 }
             }
         };
         timer.start();
     }
 
+    public void setLevel(int level){
+        this.level = level;
+    }
+
     public void shoot(){
-        theinterface.moverocket();
+
     }
 
 /*
@@ -97,4 +104,3 @@ public class GameManager {
     }*/
 
 }
-

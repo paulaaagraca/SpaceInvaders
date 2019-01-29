@@ -28,7 +28,7 @@ public class Main extends Application {
 
     public static Player player;
     public static Stage stage;
-    public static Level level1;
+
 
     @FXML
     @Override
@@ -67,11 +67,12 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static void showGameMenu() throws IOException{
+    public static void showGameMenu(int level) throws IOException{
 
         Interface gameinterface = new Interface(stage);
         gameinterface.updateInterface();
         GameManager game = new GameManager(player, stage, gameinterface);
+        game.setLevel(level);
         game.loop();
     }
 
