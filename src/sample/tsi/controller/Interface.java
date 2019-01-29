@@ -1,83 +1,187 @@
 package sample.tsi.controller;
 
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import sample.tsi.model.Entity;
 import sample.tsi.model.Invader;
-import sample.tsi.model.MenuBluePrint;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Interface {
-    public Entity rockets;
-    public Entity spaceship;
-    public List<Node> invaders;
-    int invadercount;
+    public List<Invader> invaders;
+    public static ImageView viewspaceship;
+    public static Group spaceshipgroup;
+    public Group root;
+    public Stage stage;
+    int W = 512;
+    int H = 384;
 
+    boolean goup = false,
+            goright = false,
+            goleft = false,
+            godown = false,
+            pause = false,
+            space = false;
 
-    int updateInterface(){
+    public Interface(Stage stage) {
+        this.stage = stage;
+
+        stage.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case UP:
+                        goup = true;
+                        break;
+                    case DOWN:
+                        godown = true;
+                        break;
+                    case LEFT:
+                        goleft = true;
+                        break;
+                    case RIGHT:
+                        goright = true;
+                        break;
+                    case SPACE:
+                        space = true;
+                        break;
+                    case P:
+                        pause = true;
+                        //pause();
+                        break;
+                }
+            }
+        });
+        //stage.getScene().enableInputMethodEvents();
+        stage.getScene().setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case UP:
+                        goup = false;
+                        break;
+                    case DOWN:
+                        godown = false;
+                        break;
+                    case LEFT:
+                        goleft = false;
+                        break;
+                    case RIGHT:
+                        goright = false;
+                        break;
+                    case SPACE:
+                        space = false;
+                        break;
+                }
+            }
+        });
+    }
+
+    public int updateInterface(){
+
+        int dx = 0, dy = 0;
+
+        if (goright) dx += 5;
+        if (goleft) dx -= 5;
+        if (space) moverocket();
+
+        theinterface.move(theinterface.spaceshipgroup, dx, dy);
 
 
 
         return 1;
     }
 
-   /* public static Group invaders1(){
-        List<Node> invaders;
-        invaders = new ArrayList<>();
-        Image img1 = new Image("sample/stuff/invader1b.png");
-        Node invader1 = new ImageView(img1);
+    private Group showinvader(int type, double x, double y){
 
-        for (double i = 50; i < 500; i += 50) {
-            //Invader invader12 = new Invader(1, i, 50);
-            ImageView invaderview = new ImageView(img1);
-            //invaderview.setX(i * 2);
-            invaders.add(invaderview);
+        ImageView imginvader;
+
+        if(type == 1) {
+            Image img1 = new Image("sample/stuff/invader_size.png");
+            imginvader =  new ImageView(img1);
+        }
+        else {
+            Image img2 = new Image("sample/stuff/invader4_size.png");
+            imginvader =  new ImageView(img2);
         }
 
-        Group invadersgroup = new Group(invaders);
-        return invadersgroup;
-    }*/
-
-
-    public static Group showinvader(){
-
-        Image img1 = new Image("sample/stuff/invader1b.png");
-        ImageView imginvader =  new ImageView(img1);
-        imginvader.setX(50);
         Group invadersgroup = new Group(imginvader);
-
+        if (place(invadersgroup,x,y) != 0){
+            return null;
+        }
         return invadersgroup;
     }
 
-    public static ImageView viewspaceship(){
-        Image imgsship = new Image("sample/stuff/spaceshipb.png");
-        ImageView viewspaceship =  new ImageView(imgsship);
+    public void loadlevel(int level){
+        invaders = new ArrayList<Invader>();
+        Group g;
 
-        return viewspaceship;
+        for (double i = 0; i < W; i += 100) {
+            Invader invader1 = new Invader(1,i,50);
+            g = showinvader(1,invader1.getx(),invader1.gety());
+            if(g == null) continue;
+            root.getChildren().add(g);
+            invaders.add(invader1);
+        }
     }
 
-    public static Group showspaceship(){
+    public Group showspaceship(){
 
-        Group spaceshipgroup = new Group(viewspaceship());
+        Image imgsship = new Image("sample/stuff/spaceship_size.png");
+        viewspaceship =  new ImageView(imgsship);
+        spaceshipgroup = new Group(viewspaceship);
 
         return spaceshipgroup;
     }
 
-    public void movespaceship(ImageView viewspaceship, double x, double y){
+    public void move(Node g, int dx, int dy) {
+        if (dx == 0 && dy == 0) return;
 
-        viewspaceship.setX(x);
-        viewspaceship.setY(y);
+        double x = g.getLayoutX() + dx;
+        double y = g.getLayoutY() + dy;
 
+        place(g, x, y);
     }
 
+    public int place(Node g, double x, double y) {
 
+        final double cx = g.getBoundsInLocal().getWidth() ;
+        final double cy = g.getBoundsInLocal().getHeight();
 
+        if (x >= 0 &&
+                x + cx <= W &&
+                y >= 0 &&
+                y + cy <= H) {
+            g.relocate(x , y);
+        }
+        else {
+            System.out.println("Object out of bounds");
+            System.out.println("cx=" + cx + " ;cy=" + cy );
+            return -1;
+        }
+        return 0;
+    }
 
+    public Group rocket(){
+
+        Image imgrocket = new Image("sample/stuff/rocket_size.png");
+        ImageView viewrocket =  new ImageView(imgrocket);
+        Group rocketgroup = new Group(viewrocket);
+
+        return rocketgroup;
+    }
+
+    public void moverocket() {
+        Group g = rocket();
+        root.getChildren().add(g);
+        place(g,spaceshipgroup.getLayoutX() + (spaceshipgroup.getBoundsInLocal().getWidth()/2) - 2, spaceshipgroup.getLayoutY() - g.getBoundsInLocal().getHeight());
+    }
 }

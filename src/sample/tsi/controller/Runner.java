@@ -1,3 +1,4 @@
+/*
 package sample.tsi.controller;
 
 import javafx.animation.AnimationTimer;
@@ -105,3 +106,4 @@ import javafx.stage.Stage;
 
         public static void main(String[] args) { launch(args); }
     }
+*/

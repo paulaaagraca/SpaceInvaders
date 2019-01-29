@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.tsi.controller.GameManager;
 
+import sample.tsi.controller.Interface;
 import sample.tsi.model.Player;
 
 
@@ -68,9 +69,10 @@ public class Main extends Application {
 
     public static void showGameMenu() throws IOException{
 
-        GameManager game = new GameManager(player, stage);
+        Interface gameinterface = new Interface(stage);
+        gameinterface.updateInterface();
+        GameManager game = new GameManager(player, stage, gameinterface);
         game.loop();
-
     }
 
     public static void showWinMenu() throws IOException {
