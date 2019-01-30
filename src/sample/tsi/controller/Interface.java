@@ -65,6 +65,7 @@ public class Interface {
         root.getChildren().add(canvas);
         root.getChildren().add(showspaceship());
         timelabel.setLayoutX(250);
+        timelabel.setTextFill(Color.rgb(105,105,105));
         root.getChildren().add(timelabel);
 
 
@@ -176,6 +177,7 @@ public class Interface {
         invaders = new ArrayList<Invader>();
         Node labelpname = new Group();
         playername = new Label(player.getPlayerName(), labelpname);
+        playername.setTextFill(Color.rgb(105,105,105));
         root.getChildren().add(playername);
 
         if (level == 1) {
@@ -191,7 +193,7 @@ public class Interface {
             }
         }
         if (level == 2) {
-            for (double i = 20, j = 40; i < W; i += 80, j += 60) {
+            for (double i = 15, j = 50; i < W; i += 73, j += 74) {
                 Group g1, g2;
                 Invader invader1 = new Invader(1, i, 100, 0, 0);
                 Invader invader2 = new Invader(2, j, 50, 0, 0);
@@ -211,11 +213,10 @@ public class Interface {
         }
         if (level == 3) {
             System.out.println("entered load level 3");
-            for (double i = 20, k=10 ,j = 40; k < W ; i += 60, k += 40, j += 60) {
-                Group g1, g2, g3;
-                Invader invader1 = new Invader(1, i, 50, 0, 0);
-                Invader invader2 = new Invader(2, i, 100, 0, 0);
-                Invader invader3 = new Invader(3, k, 150, 0, 0);
+            for (double i = 30, j = 30; i < W; i += 60, j += 60) {
+                Group g1, g2;
+                Invader invader1 = new Invader(1, i, 150, 0, 0);
+                Invader invader2 = new Invader(2, j, 100, 0, 0);
                 g1 = showinvader(1, invader1.getx(), invader1.gety());
                 if (g1 == null) continue;
                 invader1.setw(g1.getBoundsInLocal().getWidth());
@@ -228,12 +229,67 @@ public class Interface {
                 invader2.seth(g2.getBoundsInLocal().getHeight());
                 root.getChildren().add(g2);
                 invaders.add(invader2);
+            }
+            for (double k = 20; k < W; k += 40) {
+                Group g3;
+                Invader invader3 = new Invader(3, k, 50, 0, 0);
                 g3 = showinvader(3, invader3.getx(), invader3.gety());
                 if (g3 == null) continue;
                 invader3.setw(g3.getBoundsInLocal().getWidth());
                 invader3.seth(g3.getBoundsInLocal().getHeight());
                 root.getChildren().add(g3);
                 invaders.add(invader3);
+            }
+        } else if (level ==4 || level == 5){
+            for (double i = 25, j = 50; j < W; i += 60, j += 54) {
+                Group g2, g3, g22, g33;
+                Invader invader2 = new Invader(2, i, 100, 0, 0);
+                Invader invader3 = new Invader(3, j, 50, 0, 0);
+                Invader invader22 = new Invader(2, i, 140, 0, 0);
+                Invader invader33 = new Invader(3, j, 180, 0, 0);
+                g2 = showinvader(2, invader2.getx(), invader2.gety());
+                if (g2 == null) continue;
+                invader2.setw(g2.getBoundsInLocal().getWidth());
+                invader2.seth(g2.getBoundsInLocal().getHeight());
+                root.getChildren().add(g2);
+                invaders.add(invader2);
+                g22 = showinvader(2, invader22.getx(), invader22.gety());
+                if (g22 == null) continue;
+                invader22.setw(g22.getBoundsInLocal().getWidth());
+                invader22.seth(g22.getBoundsInLocal().getHeight());
+                root.getChildren().add(g22);
+                invaders.add(invader22);
+                g3 = showinvader(3, invader3.getx(), invader3.gety());
+                if (g3 == null) continue;
+                invader3.setw(g3.getBoundsInLocal().getWidth());
+                invader3.seth(g3.getBoundsInLocal().getHeight());
+                root.getChildren().add(g3);
+                invaders.add(invader3);
+                g33 = showinvader(3, invader33.getx(), invader33.gety());
+                if (g33 == null) continue;
+                invader33.setw(g33.getBoundsInLocal().getWidth());
+                invader33.seth(g33.getBoundsInLocal().getHeight());
+                root.getChildren().add(g33);
+                invaders.add(invader33);
+            }
+            if (level == 5) {
+                for (double i = 40; i < W; i += 100) {
+                    Group g1, g11;
+                    Invader invader1 = new Invader(1, i, 20, 0, 0);
+                    g1 = showinvader(1, invader1.getx(), invader1.gety());
+                    if (g1 == null) continue;
+                    invader1.setw(g1.getBoundsInLocal().getWidth());
+                    invader1.seth(g1.getBoundsInLocal().getHeight());
+                    root.getChildren().add(g1);
+                    invaders.add(invader1);
+                    Invader invader11 = new Invader(1, i, 225, 0, 0);
+                    g11 = showinvader(1, invader11.getx(), invader11.gety());
+                    if (g11 == null) continue;
+                    invader1.setw(g11.getBoundsInLocal().getWidth());
+                    invader1.seth(g11.getBoundsInLocal().getHeight());
+                    root.getChildren().add(g11);
+                    invaders.add(invader11);
+                }
             }
         }
         return invaders;
