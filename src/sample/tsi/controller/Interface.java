@@ -18,6 +18,7 @@ import sample.tsi.model.Invader;
 import sample.tsi.model.Player;
 import sample.tsi.model.Rocket;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -36,7 +37,8 @@ public class Interface {
     private boolean cannon_blocked = false;
     public Label playername;
     public Node nodetime = new Group();
-    public Label timelabel = new Label("00:00",nodetime);
+    public Label timelabel = new Label("00:00", nodetime);
+    public int indexrocket;
 
     boolean goup = false,
             goright = false,
@@ -138,7 +140,7 @@ public class Interface {
 
     public void setTime(int time) {
 
-        int auxtime = time/60;
+        int auxtime = time / 60;
         timelabel.setText(auxtime + ":" + time % 60);
     }
 
@@ -147,11 +149,19 @@ public class Interface {
         ImageView imginvader;
 
         if (type == 1) {
-            Image img1 = new Image("sample/stuff/invader_size.png");
+            Image img1 = new Image("sample/stuff/invader1.png");
             imginvader = new ImageView(img1);
-        } else {
-            Image img2 = new Image("sample/stuff/invader4_size.png");
+        } else if (type == 2) {
+            Image img2 = new Image("sample/stuff/invader2.png");
             imginvader = new ImageView(img2);
+        } else if (type == 3) {
+            System.out.println("entered type 3 invader");
+            Image img3 = new Image("sample/stuff/invader3.png");
+            imginvader = new ImageView(img3);
+        } else {
+            Image img1 = new Image("sample/stuff/invader1.png");
+            imginvader = new ImageView(img1);
+            //add image 3
         }
 
         Group invadersgroup = new Group(imginvader);
@@ -162,20 +172,69 @@ public class Interface {
     }
 
     public List<Invader> loadlevel(int level, Player player) {
+
         invaders = new ArrayList<Invader>();
-        Group g;
         Node labelpname = new Group();
         playername = new Label(player.getPlayerName(), labelpname);
         root.getChildren().add(playername);
 
-        for (double i = 30; i < W; i += 100) {
-            Invader invader1 = new Invader(1, i, 50, 0, 0);
-            g = showinvader(1, invader1.getx(), invader1.gety());
-            if (g == null) continue;
-            invader1.setw(g.getBoundsInLocal().getWidth());
-            invader1.seth(g.getBoundsInLocal().getHeight());
-            root.getChildren().add(g);
-            invaders.add(invader1);
+        if (level == 1) {
+            for (double i = 40; i < W; i += 100) {
+                Group g;
+                Invader invader1 = new Invader(1, i, 50, 0, 0);
+                g = showinvader(1, invader1.getx(), invader1.gety());
+                if (g == null) continue;
+                invader1.setw(g.getBoundsInLocal().getWidth());
+                invader1.seth(g.getBoundsInLocal().getHeight());
+                root.getChildren().add(g);
+                invaders.add(invader1);
+            }
+        }
+        if (level == 2) {
+            for (double i = 20, j = 40; i < W; i += 80, j += 60) {
+                Group g1, g2;
+                Invader invader1 = new Invader(1, i, 100, 0, 0);
+                Invader invader2 = new Invader(2, j, 50, 0, 0);
+                g1 = showinvader(1, invader1.getx(), invader1.gety());
+                if (g1 == null) continue;
+                invader1.setw(g1.getBoundsInLocal().getWidth());
+                invader1.seth(g1.getBoundsInLocal().getHeight());
+                root.getChildren().add(g1);
+                invaders.add(invader1);
+                g2 = showinvader(2, invader2.getx(), invader2.gety());
+                if (g2 == null) continue;
+                invader2.setw(g2.getBoundsInLocal().getWidth());
+                invader2.seth(g2.getBoundsInLocal().getHeight());
+                root.getChildren().add(g2);
+                invaders.add(invader2);
+            }
+        }
+        if (level == 3) {
+            System.out.println("entered load level 3");
+            for (double i = 20, k=10 ,j = 40; k < W ; i += 60, k += 40, j += 60) {
+                Group g1, g2, g3;
+                Invader invader1 = new Invader(1, i, 50, 0, 0);
+                Invader invader2 = new Invader(2, i, 100, 0, 0);
+                Invader invader3 = new Invader(3, k, 150, 0, 0);
+                g1 = showinvader(1, invader1.getx(), invader1.gety());
+                if (g1 == null) continue;
+                invader1.setw(g1.getBoundsInLocal().getWidth());
+                invader1.seth(g1.getBoundsInLocal().getHeight());
+                root.getChildren().add(g1);
+                invaders.add(invader1);
+                g2 = showinvader(2, invader2.getx(), invader2.gety());
+                if (g2 == null) continue;
+                invader2.setw(g2.getBoundsInLocal().getWidth());
+                invader2.seth(g2.getBoundsInLocal().getHeight());
+                root.getChildren().add(g2);
+                invaders.add(invader2);
+                g3 = showinvader(3, invader3.getx(), invader3.gety());
+                if (g3 == null) continue;
+                invader3.setw(g3.getBoundsInLocal().getWidth());
+                invader3.seth(g3.getBoundsInLocal().getHeight());
+                root.getChildren().add(g3);
+                invaders.add(invader3);
+            }
         }
         return invaders;
     }
@@ -239,7 +298,8 @@ public class Interface {
             for (int j = 0; j < root.getChildren().size(); j++) {
                 Node n = root.getChildren().get(j);
                 if (n.getLayoutX() == r.getx() && n.getLayoutY() == r.gety()) {
-                    if (r.gety() == 0) {
+                    if (r.gety() <= 0) {
+                        System.out.println("remove rocket hits up");
                         root.getChildren().remove(j);
                         rockets.remove(i);
                     } else {

@@ -30,11 +30,29 @@ public class levelmenucontrol {
     }
 
     public void handleLevel3(ActionEvent actionEvent) {
+        try {
+            Main.showGameMenu(3);
+            System.out.println("entered handle level 3");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void handleLevel4(ActionEvent actionEvent) {
+        try {
+            Main.showGameMenu(4);
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void handleLevel5(ActionEvent actionEvent) {
+        try {
+            Main.showGameMenu(5);
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

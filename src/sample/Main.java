@@ -73,6 +73,7 @@ public class Main extends Application {
         Interface gameinterface = new Interface(stage);
         gameinterface.updateInterface();
         GameManager game = new GameManager(player, stage, gameinterface);
+        System.out.println("entered showgamemenu");
         game.setLevel(level);
         game.loop();
     }

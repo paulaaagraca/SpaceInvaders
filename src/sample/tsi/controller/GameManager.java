@@ -26,6 +26,7 @@ public class GameManager {
     double auxtime = 100000;
     double startTimePaused;
     double timePaused = 0;
+    boolean endgame = false;
 
 
     //constructor
@@ -47,9 +48,11 @@ public class GameManager {
                     time = (currentNanoTime - startTime - timePaused) / 1000000000.0;
                     theinterface.updateInterface();
                     checkcollisions();
-                    if (theinterface.invaders.size() == 0) {
+                    if (theinterface.invaders.size() == 0 && !endgame) {
+                        System.out.println("invaders vector empty");
                         paused = true;
                         theinterface.win();
+                        endgame = true;
                     }
                     theinterface.setTime((int) time);
                     if (theinterface.pause) {
@@ -76,21 +79,23 @@ public class GameManager {
             Rocket r = theinterface.rockets.get(i);
             for (int j = 0; j < theinterface.invaders.size(); j++) {
                 Invader inv = theinterface.invaders.get(j);
-                System.out.println("in invader for");
+                System.out.println("checking for invaders and rockets");
                 if (inv.getx() + inv.getw() / 2 < r.getx() + 15 && inv.getx() + inv.getw() / 2 > r.getx() - 15 && inv.gety() < r.gety() + 10 && inv.gety() > r.gety() - 10) {
-                    System.out.println("in square");
+                    System.out.println("Rocket entered square");
                     for (int k = 0; k < theinterface.root.getChildren().size(); k++) {
                         Node n = theinterface.root.getChildren().get(k);
                         if (n.getLayoutX() == r.getx() && n.getLayoutY() == r.gety()) {
                             theinterface.root.getChildren().remove(k);
                             theinterface.rockets.remove(i);
+                            System.out.println("Removed rocket");
                         }
                     }
-                    for (int k = 0; k < theinterface.root.getChildren().size(); k++) {
-                        Node n = theinterface.root.getChildren().get(k);
+                    for (int u = 0; u < theinterface.root.getChildren().size(); u++) {
+                        Node n = theinterface.root.getChildren().get(u);
                         if (n.getLayoutX() == inv.getx() && n.getLayoutY() == inv.gety()) {
-                            theinterface.root.getChildren().remove(k);
+                            theinterface.root.getChildren().remove(u);
                             theinterface.invaders.remove(j);
+                            System.out.println("Removed invader");
                         }
 
                     }
