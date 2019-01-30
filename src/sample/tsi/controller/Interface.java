@@ -1,24 +1,32 @@
 package sample.tsi.controller;
 
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import sample.Main;
 import sample.tsi.model.Invader;
+import sample.tsi.model.Player;
 import sample.tsi.model.Rocket;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Interface {
-    public static List<Invader> invaders;
-    public static List<Rocket> rockets = new ArrayList<Rocket>();
+    public List<Invader> invaders;
+    public List<Rocket> rockets = new ArrayList<Rocket>();
     public static ImageView viewspaceship;
     public static Group spaceshipgroup;
     public Group root;
@@ -26,6 +34,9 @@ public class Interface {
     int W = 512;
     int H = 384;
     private boolean cannon_blocked = false;
+    public Label playername;
+    public Node nodetime = new Group();
+    public Label timelabel = new Label("00:00",nodetime);
 
     boolean goup = false,
             goright = false,
@@ -34,18 +45,28 @@ public class Interface {
             pause = false,
             space = false;
 
-    public Interface(Stage stage) {
+    public Interface(Stage stage) throws IOException {
         this.stage = stage;
 
         root = new Group();
+
+        URL url = new File("src/sample/resources/gamemenu.fxml").toURL();
+        Parent designroot = FXMLLoader.load(url);
+
+
         Scene setscene = new Scene(root, W, H, Color.MIDNIGHTBLUE);
         stage.setScene(setscene);
 
         Canvas canvas = new Canvas(W, H);
+        root.getChildren().add(designroot.getChildrenUnmodifiable().get(0));
+
         root.getChildren().add(canvas);
         root.getChildren().add(showspaceship());
+        timelabel.setLayoutX(250);
+        root.getChildren().add(timelabel);
 
-        place(spaceshipgroup,W/2 - 30, H - 30);
+
+        place(spaceshipgroup, W / 2 - 30, H - 30);
 
         stage.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -67,13 +88,11 @@ public class Interface {
                         space = true;
                         break;
                     case P:
-                        pause = true;
-                        //pause();
+                        pause = !pause;
                         break;
                 }
             }
         });
-        //stage.getScene().enableInputMethodEvents();
         stage.getScene().setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -94,6 +113,7 @@ public class Interface {
                         space = false;
                         cannon_blocked = false;
                         break;
+
                 }
             }
         });
@@ -116,44 +136,54 @@ public class Interface {
         return 1;
     }
 
-    private Group showinvader(int type, double x, double y){
+    public void setTime(int time) {
+
+        int auxtime = time/60;
+        timelabel.setText(auxtime + ":" + time % 60);
+    }
+
+    private Group showinvader(int type, double x, double y) {
 
         ImageView imginvader;
 
-        if(type == 1) {
+        if (type == 1) {
             Image img1 = new Image("sample/stuff/invader_size.png");
-            imginvader =  new ImageView(img1);
-        }
-        else {
+            imginvader = new ImageView(img1);
+        } else {
             Image img2 = new Image("sample/stuff/invader4_size.png");
-            imginvader =  new ImageView(img2);
+            imginvader = new ImageView(img2);
         }
 
         Group invadersgroup = new Group(imginvader);
-        if (place(invadersgroup,x,y) != 0){
+        if (place(invadersgroup, x, y) != 0) {
             return null;
         }
         return invadersgroup;
     }
 
-    public List<Invader> loadlevel(int level){
+    public List<Invader> loadlevel(int level, Player player) {
         invaders = new ArrayList<Invader>();
         Group g;
+        Node labelpname = new Group();
+        playername = new Label(player.getPlayerName(), labelpname);
+        root.getChildren().add(playername);
 
-        for (double i = 0; i < W; i += 100) {
-            Invader invader1 = new Invader(1,i,50);
-            g = showinvader(1,invader1.getx(),invader1.gety());
-            if(g == null) continue;
+        for (double i = 30; i < W; i += 100) {
+            Invader invader1 = new Invader(1, i, 50, 0, 0);
+            g = showinvader(1, invader1.getx(), invader1.gety());
+            if (g == null) continue;
+            invader1.setw(g.getBoundsInLocal().getWidth());
+            invader1.seth(g.getBoundsInLocal().getHeight());
             root.getChildren().add(g);
             invaders.add(invader1);
         }
         return invaders;
     }
 
-    public Group showspaceship(){
+    public Group showspaceship() {
 
         Image imgsship = new Image("sample/stuff/spaceship_size.png");
-        viewspaceship =  new ImageView(imgsship);
+        viewspaceship = new ImageView(imgsship);
         spaceshipgroup = new Group(viewspaceship);
 
         return spaceshipgroup;
@@ -170,27 +200,26 @@ public class Interface {
 
     public int place(Node g, double x, double y) {
 
-        final double cx = g.getBoundsInLocal().getWidth() ;
+        final double cx = g.getBoundsInLocal().getWidth();
         final double cy = g.getBoundsInLocal().getHeight();
 
         if (x >= 0 &&
                 x + cx <= W &&
                 y >= 0 &&
                 y + cy <= H) {
-            g.relocate(x , y);
-        }
-        else {
+            g.relocate(x, y);
+        } else {
             System.out.println("Object out of bounds");
-            System.out.println("cx=" + cx + " ;cy=" + cy );
+            System.out.println("cx=" + cx + " ;cy=" + cy);
             return -1;
         }
         return 0;
     }
 
-    public Group showrocket(){
+    public Group showrocket() {
 
         Image imgrocket = new Image("sample/stuff/rocket_size.png");
-        ImageView viewrocket =  new ImageView(imgrocket);
+        ImageView viewrocket = new ImageView(imgrocket);
         Group rocketgroup = new Group(viewrocket);
 
         return rocketgroup;
@@ -198,29 +227,36 @@ public class Interface {
 
     public void placerocket() {
         Group g = showrocket();
-        Rocket rocket = new Rocket(spaceshipgroup.getLayoutX() + (spaceshipgroup.getBoundsInLocal().getWidth()/2) - 2, spaceshipgroup.getLayoutY() - g.getBoundsInLocal().getHeight());
-        place(g,rocket.getx(),rocket.gety());
+        Rocket rocket = new Rocket(spaceshipgroup.getLayoutX() + (spaceshipgroup.getBoundsInLocal().getWidth() / 2) - 2, spaceshipgroup.getLayoutY() - g.getBoundsInLocal().getHeight());
+        place(g, rocket.getx(), rocket.gety());
         root.getChildren().add(g);
         rockets.add(rocket);
     }
 
-    public void moverockets(){
-        for(int i=0; i<rockets.size(); i++){
+    public void moverockets() {
+        for (int i = 0; i < rockets.size(); i++) {
             Rocket r = rockets.get(i);
-            for(int j=0; j<root.getChildren().size(); j++){
+            for (int j = 0; j < root.getChildren().size(); j++) {
                 Node n = root.getChildren().get(j);
-                if(n.getLayoutX() == r.getx() && n.getLayoutY() == r.gety()){
+                if (n.getLayoutX() == r.getx() && n.getLayoutY() == r.gety()) {
                     if (r.gety() == 0) {
                         root.getChildren().remove(j);
                         rockets.remove(i);
-                    }
-                    else {
+                    } else {
                         r.sety(r.gety() - 5);
                         place(n, r.getx(), r.gety());
                         rockets.set(i, r);
                     }
                 }
             }
+        }
+    }
+
+    public void win() {
+        try {
+            Main.showWinMenu();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

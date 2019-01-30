@@ -7,10 +7,14 @@ import java.io.IOException;
 
 public class winmenucontrol {
     public void handleSubmitButt(ActionEvent actionEvent) {
-
     }
 
     public void handleNextLevel(ActionEvent actionEvent) {
+        try {
+            Main.showLevelMenu();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleMainMenu(ActionEvent actionEvent) {

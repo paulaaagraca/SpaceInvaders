@@ -1,22 +1,16 @@
 package sample.tsi.controller;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
+import javafx.scene.Node;
+
 import javafx.stage.Stage;
+
 import sample.tsi.model.*;
-import javafx.scene.canvas.Canvas;
+
 
 import java.io.IOException;
-import java.util.List;
+
 
 public class GameManager {
     public int gamestate;
@@ -24,19 +18,18 @@ public class GameManager {
     public String timer;
     public Player player;
     public Sound sound;
-    public Group root;
-    public boolean paused;
+    public boolean paused = false;
     public double time;
     public Stage stage;
     public Interface theinterface;
-    public List<Invader> invaders;
-    public List<Rocket> rockets;
     int level;
-
+    double auxtime = 100000;
+    double startTimePaused;
+    double timePaused = 0;
 
 
     //constructor
-    public GameManager(Player player, Stage stage, Interface uinterface) { //add level
+    public GameManager(Player player, Stage stage, Interface uinterface) {
         this.player = player;
         this.stage = stage;
         this.theinterface = uinterface;
@@ -44,27 +37,66 @@ public class GameManager {
 
     public void loop() throws IOException {
 
-        invaders = theinterface.loadlevel(level);
+        theinterface.invaders = theinterface.loadlevel(level, player);
 
         final long startTime = System.nanoTime();
-        AnimationTimer timer = new AnimationTimer(){
+        AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long currentNanoTime) {
-                if(!paused){
-                    time = (currentNanoTime - startTime) / 1000000000.0;
+                if (!paused) {
+                    time = (currentNanoTime - startTime - timePaused) / 1000000000.0;
                     theinterface.updateInterface();
+                    checkcollisions();
+                    if (theinterface.invaders.size() == 0) {
+                        paused = true;
+                        theinterface.win();
+                    }
+                    theinterface.setTime((int) time);
+                    if (theinterface.pause) {
+                        paused = true;
+                        startTimePaused = currentNanoTime;
+                    }
+                } else {
+                    timePaused = (currentNanoTime - startTimePaused);
+                    if (!theinterface.pause) {
+                        paused = false;
+                    }
                 }
             }
         };
         timer.start();
     }
 
-    public void setLevel(int level){
+    public void setLevel(int level) {
         this.level = level;
     }
 
-    public void shoot(){
+    public void checkcollisions() {
+        for (int i = 0; i < theinterface.rockets.size(); i++) {
+            Rocket r = theinterface.rockets.get(i);
+            for (int j = 0; j < theinterface.invaders.size(); j++) {
+                Invader inv = theinterface.invaders.get(j);
+                System.out.println("in invader for");
+                if (inv.getx() + inv.getw() / 2 < r.getx() + 15 && inv.getx() + inv.getw() / 2 > r.getx() - 15 && inv.gety() < r.gety() + 10 && inv.gety() > r.gety() - 10) {
+                    System.out.println("in square");
+                    for (int k = 0; k < theinterface.root.getChildren().size(); k++) {
+                        Node n = theinterface.root.getChildren().get(k);
+                        if (n.getLayoutX() == r.getx() && n.getLayoutY() == r.gety()) {
+                            theinterface.root.getChildren().remove(k);
+                            theinterface.rockets.remove(i);
+                        }
+                    }
+                    for (int k = 0; k < theinterface.root.getChildren().size(); k++) {
+                        Node n = theinterface.root.getChildren().get(k);
+                        if (n.getLayoutX() == inv.getx() && n.getLayoutY() == inv.gety()) {
+                            theinterface.root.getChildren().remove(k);
+                            theinterface.invaders.remove(j);
+                        }
 
+                    }
+                }
+            }
+        }
     }
 
 /*
@@ -78,29 +110,10 @@ public class GameManager {
 
     }
 
-    void loadlevel(){
-
-    }
-
     String[] getHighscore(){
         return null;
     }
 
-    void loadLevel(){
-        level = new LevelBluePrint();
-
-    }
-
-    void checkCollision(){
-
-    }
-
-    public void pausegame(){
-        pauseFlag = !pauseFlag;
-        if(pauseFlag){
-
-
-        }
     }*/
 
 }

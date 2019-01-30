@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 
+import sample.tsi.model.Sound;
 import sample.tsi.view.gamemenucontrol;
 import sample.tsi.view.highscoremenucontrol;
 import sample.tsi.view.mainmenucontrol;
