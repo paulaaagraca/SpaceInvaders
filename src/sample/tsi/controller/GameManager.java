@@ -3,11 +3,8 @@ package sample.tsi.controller;
 import javafx.animation.AnimationTimer;
 
 import javafx.scene.Node;
-
 import javafx.stage.Stage;
-
 import sample.tsi.model.*;
-
 
 import java.io.IOException;
 
@@ -15,18 +12,17 @@ import java.io.IOException;
 public class GameManager {
     public int gamestate;
     public String[] registeredplayers;
-    public String timer;
     public Player player;
-    public Sound sound;
-    public boolean paused = false;
+    public static Sound sound = new Sound();
+    public Sound crashsound = new Sound();
+    public boolean paused = true;
     public double time;
     public Stage stage;
     public Interface theinterface;
     int level;
-    double auxtime = 100000;
-    double startTimePaused;
-    double timePaused = 0;
-    boolean endgame = false;
+    private double startTimePaused;
+    private double timePaused = 0;
+    private boolean endgame = false;
 
 
     //constructor
@@ -38,7 +34,7 @@ public class GameManager {
 
     public void loop() throws IOException {
 
-        theinterface.invaders = theinterface.loadlevel(level, player);
+        theinterface.invaders = theinterface.loadlevel(level, player,sound);
 
         final long startTime = System.nanoTime();
         AnimationTimer timer = new AnimationTimer() {
@@ -49,10 +45,15 @@ public class GameManager {
                     theinterface.updateInterface();
                     checkcollisions();
                     if (theinterface.invaders.size() == 0 && !endgame) {
+                        endgame = true;
                         System.out.println("invaders vector empty");
                         paused = true;
-                        theinterface.win();
-                        endgame = true;
+
+                        player.setHighscore((int)time/60 + ":" + (int)time%60);
+                        System.out.println("highscore in gamemanager:" + player.getHighscore());
+                        sound.stopsound();
+                        theinterface.win(player);
+                        this.stop();
                     }
                     theinterface.setTime((int) time);
                     if (theinterface.pause) {
@@ -60,9 +61,11 @@ public class GameManager {
                         startTimePaused = currentNanoTime;
                     }
                 } else {
+                    sound.pausesound();
                     timePaused = (currentNanoTime - startTimePaused);
                     if (!theinterface.pause) {
                         paused = false;
+                        sound.playsound();
                     }
                 }
             }
@@ -82,6 +85,7 @@ public class GameManager {
                 System.out.println("checking for invaders and rockets");
                 if (inv.getx() + inv.getw() / 2 < r.getx() + 15 && inv.getx() + inv.getw() / 2 > r.getx() - 15 && inv.gety() < r.gety() + 10 && inv.gety() > r.gety() - 10) {
                     System.out.println("Rocket entered square");
+
                     for (int k = 0; k < theinterface.root.getChildren().size(); k++) {
                         Node n = theinterface.root.getChildren().get(k);
                         if (n.getLayoutX() == r.getx() && n.getLayoutY() == r.gety()) {
@@ -105,10 +109,6 @@ public class GameManager {
     }
 
 /*
-
-    void playSound(){
-
-    }
 
 
     void submit(){

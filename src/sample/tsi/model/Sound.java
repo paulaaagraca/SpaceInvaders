@@ -2,23 +2,38 @@ package sample.tsi.model;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
-import javax.sound.sampled.AudioInputStream;
 import java.io.File;
 
 public class Sound {
-    public File crashSound;
 
     public File menuSound; //silence (?)
 
-    Media gameSound = new Media(this.getClass().getResource("sample/stuff/music.mp3").toExternalForm());
+    Media gameSound = new Media(this.getClass().getResource("song.mp3").toExternalForm());
     MediaPlayer soundplayer = new MediaPlayer(gameSound);
 
-    public void playsound(){
+
+    public Sound() {
+        soundplayer.setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                soundplayer.seek(Duration.ZERO);
+                soundplayer.play();
+            }
+        });
+    }
+
+
+    public void playsound() {
         soundplayer.play();
     }
 
-    public void pausesound(){
+    public void pausesound() {
         soundplayer.pause();
+    }
+
+    public void stopsound(){
+        soundplayer.stop();
     }
 }

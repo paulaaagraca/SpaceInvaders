@@ -17,8 +17,9 @@ import sample.Main;
 import sample.tsi.model.Invader;
 import sample.tsi.model.Player;
 import sample.tsi.model.Rocket;
+import sample.tsi.model.Sound;
+import sample.tsi.view.winmenucontrol;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -38,7 +39,6 @@ public class Interface {
     public Label playername;
     public Node nodetime = new Group();
     public Label timelabel = new Label("00:00", nodetime);
-    public int indexrocket;
 
     boolean goup = false,
             goright = false,
@@ -55,7 +55,6 @@ public class Interface {
         URL url = new File("src/sample/resources/gamemenu.fxml").toURL();
         Parent designroot = FXMLLoader.load(url);
 
-
         Scene setscene = new Scene(root, W, H, Color.MIDNIGHTBLUE);
         stage.setScene(setscene);
 
@@ -65,7 +64,7 @@ public class Interface {
         root.getChildren().add(canvas);
         root.getChildren().add(showspaceship());
         timelabel.setLayoutX(250);
-        timelabel.setTextFill(Color.rgb(105,105,105));
+        timelabel.setTextFill(Color.rgb(105, 105, 105));
         root.getChildren().add(timelabel);
 
 
@@ -172,12 +171,13 @@ public class Interface {
         return invadersgroup;
     }
 
-    public List<Invader> loadlevel(int level, Player player) {
+    public List<Invader> loadlevel(int level, Player player, Sound sound) {
 
+        sound.playsound();
         invaders = new ArrayList<Invader>();
         Node labelpname = new Group();
         playername = new Label(player.getPlayerName(), labelpname);
-        playername.setTextFill(Color.rgb(105,105,105));
+        playername.setTextFill(Color.rgb(105, 105, 105));
         root.getChildren().add(playername);
 
         if (level == 1) {
@@ -240,7 +240,7 @@ public class Interface {
                 root.getChildren().add(g3);
                 invaders.add(invader3);
             }
-        } else if (level ==4 || level == 5){
+        } else if (level == 4 || level == 5) {
             for (double i = 25, j = 50; j < W; i += 60, j += 54) {
                 Group g2, g3, g22, g33;
                 Invader invader2 = new Invader(2, i, 100, 0, 0);
@@ -368,9 +368,9 @@ public class Interface {
         }
     }
 
-    public void win() {
+    public void win(Player p) {
         try {
-            Main.showWinMenu();
+            Main.showWinMenu(p);
         } catch (IOException e) {
             e.printStackTrace();
         }

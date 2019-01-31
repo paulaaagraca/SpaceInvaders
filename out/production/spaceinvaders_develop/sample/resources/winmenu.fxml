@@ -25,16 +25,16 @@
          <font>
             <Font name="Helvetica Neue" size="13.0" />
          </font></Button>
-      <Text id="timetext" fill="#e1f1f8" layoutX="233.0" layoutY="144.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" textAlignment="CENTER">
+      <Text fx:id="timetext" fill="#e1f1f8" layoutX="233.0" layoutY="144.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" textAlignment="CENTER">
          <font>
             <Font name="Helvetica Neue" size="20.0" />
          </font>
       </Text>
-      <Text id="scoretimetext" fill="#e1f1f8" layoutX="215.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
+      <Label fx:id="textfortime" layoutX="200.0" layoutY="178.0" textAlignment="CENTER" text="">
          <font>
-            <Font name="Helvetica Neue" size="32.0" />
+            <Font name="Helvetica Neue" size="28.0" />
          </font>
-      </Text>
+      </Label>
       <Button id="nextlevelbutt" layoutX="210.0" layoutY="257.0" mnemonicParsing="false" onAction="#handleNextLevel" prefHeight="0.0" prefWidth="92.0" text="Next Level">
          <font>
             <Font name="Helvetica Neue" size="13.0" />

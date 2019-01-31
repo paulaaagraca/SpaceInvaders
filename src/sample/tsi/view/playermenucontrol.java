@@ -21,7 +21,7 @@ public class playermenucontrol {
 
     public void handlePlay(ActionEvent actionEvent) throws IOException {
 
-        if(boxname.getText().length()>3 && boxname.getText().length()<8){
+        if(boxname.getText().length()>1 && boxname.getText().length()<15){
             Player p1 = new Player(boxname.getText());
 
             Main.player = p1;
